@@ -1,8 +1,5 @@
 package se.iths.entity;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -17,6 +14,7 @@ public class Item {
     @NotEmpty
     @Size(min = 5)
     private String name;
+
     private String category;
     private int quantity;
     private double price;
@@ -28,6 +26,11 @@ public class Item {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    public void getCurrentDate(){
+        setCreatedAt(LocalDate.now());
     }
 
     public Long getId() {
