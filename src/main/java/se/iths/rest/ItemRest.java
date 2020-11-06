@@ -33,14 +33,29 @@ public class ItemRest {
 
     @Path("{id}")
     @GET
-    public Item getItem(@PathParam("id") Long id){
-        return itemService.findItemById(id);
+    public Response getItem(@PathParam("id") Long id){
+        Item foundItem = itemService.findItemById(id);
+        return foundItem != null ?
+                Response.ok(foundItem)
+                        .build()
+                :
+                Response.status(Response.Status.NOT_FOUND)
+                        .entity("Item with ID " + id + " not found.")
+                        .type(MediaType.TEXT_PLAIN_TYPE)
+                        .build();
     }
 
     @Path("getall")
     @GET
     public List<Item> getAllItems(){
         return itemService.getAllItems();
+    }
+
+    @Path("delete/{id}")
+    @DELETE
+    public Response deleteItemById(@PathParam("id") Long id){
+        itemService.deleteItemById(id);
+        return Response.ok().build();
     }
 
 }

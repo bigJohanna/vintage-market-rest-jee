@@ -31,4 +31,9 @@ public class ItemService {
         return entityManager.createQuery("SELECT i from Item i", Item.class).getResultList();
     }
 
+    public Item deleteItemById(Long id) {
+        Item item = findItemById(id);
+        entityManager.remove(item);
+        return item;
+    }
 }
