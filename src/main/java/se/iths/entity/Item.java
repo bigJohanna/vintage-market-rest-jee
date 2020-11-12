@@ -1,6 +1,8 @@
 package se.iths.entity;
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -12,8 +14,11 @@ public class Item {
     private Long id;
 
     @NotEmpty
-    @Size(min = 5)
     private String name;
+
+    @NotEmpty(message = "Item must have user")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
 
     private String category;
     private int quantity;
@@ -72,4 +77,25 @@ public class Item {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @ManyToOne(optional = false)
+    private User item;
+
+    public User getItem() {
+        return item;
+    }
+
+    public void setItem(User item) {
+        this.item = item;
+    }
+
+
 }

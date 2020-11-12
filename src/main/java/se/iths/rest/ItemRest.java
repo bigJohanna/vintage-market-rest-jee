@@ -4,6 +4,7 @@ import se.iths.entity.Item;
 import se.iths.service.ItemService;
 
 import javax.inject.Inject;
+import javax.servlet.annotation.HandlesTypes;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,14 +36,9 @@ public class ItemRest {
     @GET
     public Response getItem(@PathParam("id") Long id){
         Item foundItem = itemService.findItemById(id);
-        return foundItem != null ?
-                Response.ok(foundItem)
-                        .build()
-                :
-                Response.status(Response.Status.NOT_FOUND)
-                        .entity("Item with ID " + id + " not found.")
-                        .type(MediaType.TEXT_PLAIN_TYPE)
-                        .build();
+        if( foundItem == null)
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
+        return Response.ok(foundItem).build();
     }
 
     @Path("getall")
@@ -51,10 +47,13 @@ public class ItemRest {
         return itemService.getAllItems();
     }
 
-    @Path("delete/{id}")
+    @Path("{id}")
+    @Produces(MediaType.TEXT_PLAIN)
     @DELETE
     public Response deleteItemById(@PathParam("id") Long id){
-        itemService.deleteItemById(id);
+       Item foundItem = itemService.findItemById(id);
+        if( foundItem == null)
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
         return Response.ok().build();
     }
 
